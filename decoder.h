@@ -2,7 +2,7 @@
 #define DECODER_H
 #include <vector>
 #include <iostream>
-#include <cstdio>
+#include <cstdint>
 #include <sstream>
 #include <stdexcept>
 
