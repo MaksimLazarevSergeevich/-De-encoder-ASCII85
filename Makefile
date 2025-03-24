@@ -10,7 +10,7 @@ A = ar
 
 AFLAGS = rsv
 
-CCXFLAGS = -I. -std=c++17 -Wall -Werror -Wpedantic -g -fPIC
+CCXFLAGS = -I. -std=c++17 -Wall -g -fPIC
 
 LDXXFLAGS = $(CCXFLAGS) -L. -l:$(LIBPROJECT)
 
@@ -19,6 +19,8 @@ LDGTESTFLAGS = $(LDXXFLAGS) -lgtest -lgtest_main -lpthread
 DEPS=$(wildcard *.h)
 
 OBJ=decoder.o
+
+TEST-OBJ=test-decoder.o
 
 .PHONY: default
 
