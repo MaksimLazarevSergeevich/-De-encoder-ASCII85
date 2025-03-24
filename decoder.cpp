@@ -55,10 +55,9 @@ std::string decode(std::vector<uint8_t> vectorChar)
     for (size_t i = 0; i < lenght; i += 5)
     {
         uint32_t value32 = 0; // Initialize a 32-bit integer to store the decoded value
-        size_t actualSize = 0; // Track the actual number of characters processed in this chunk
 
         // Read up to 5 characters from the input vector
-        for (size_t j = 0; j < 5 && (i + j) < lenght; j++)
+        for (size_t j = 0; j < 5; j++)
         {
             // Validate that the character is within the valid ASCII85 range ('!' to 'u')
             if (vectorChar[i + j] < '!' || vectorChar[i + j] > 'u')
@@ -66,25 +65,30 @@ std::string decode(std::vector<uint8_t> vectorChar)
                 throw std::runtime_error("Invalid ASCII85 character");
             }
             input[j] = vectorChar[i + j]; // Store the valid character in the input array
-            actualSize++; // Increment the count of processed characters
         }
 
         // Convert the 5 ASCII85 characters into a 32-bit integer
-        for (size_t j = 0; j < actualSize; ++j)
+        for (size_t j = 0; j < 5; ++j)
         {
             value32 = value32 * 85 + (input[j] - '!'); // Decode the ASCII85 characters
         }
 
         // Convert the 32-bit integer back into 4 bytes of binary data
         char output[4]; // Array to store the resulting 4 bytes
+        size_t notNullbytes = 0;
+
         for (int k = 3; k >= 0; k--)
         {
             output[3 - k] = char((value32 >> (k * 8)) & 0xFF); // Extract each byte from the 32-bit value
+            if (output[3 - k] != '\0') //Check not null bytes
+            {
+                notNullbytes += 1;
+            }
         }
 
         // Write the decoded bytes to the final string stream
-        // Only write the number of bytes corresponding to the actual characters processed
-        finalString.write(output, actualSize - 1);
+        // Only write the not null bytes
+        finalString.write(output, notNullbytes);
     }
 
     // Return the decoded string
